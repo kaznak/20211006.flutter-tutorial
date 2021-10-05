@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-filemanagerpoc-staging-153914-authRole",
+      "UnauthRoleArn": "arn:aws:iam::696762467781:role/amplify-filemanagerpoc-staging-153914-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::696762467781:role/amplify-filemanagerpoc-staging-153914-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-filemanagerpoc-staging-153914-deployment",
+      "UnauthRoleName": "amplify-filemanagerpoc-staging-153914-unauthRole",
+      "StackName": "amplify-filemanagerpoc-staging-153914",
+      "StackId": "arn:aws:cloudformation:us-east-1:696762467781:stack/amplify-filemanagerpoc-staging-153914/65257630-25f2-11ec-97b4-0eee651db65d",
+      "AmplifyAppId": "d2sxhfqucuwk3p"
+    },
+    "categories": {
+      "auth": {
+        "filemanagerpoc": {}
+      }
+    }
+  }
+}
