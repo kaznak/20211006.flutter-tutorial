@@ -2,25 +2,30 @@ import 'package:flutter/material.dart';
 import '../model/book.dart';
 import '../component/page/book_list_page.dart';
 import '../component/page/book_details_page.dart';
-import '../component/template/unknown.dart';
+import '../component/page/unknown.dart';
+
+enum BookAppPageType {
+  unknown,
+  loading,
+  bookList,
+  bookDetail,
+}
 
 class BookRoutePath {
-  final int? id;
-  final bool isUnknown;
+  final BookAppPageType pageType;
+  final int? bookId;
 
   BookRoutePath.home()
-      : id = null,
-        isUnknown = false;
-
-  BookRoutePath.details(this.id) : isUnknown = false;
-
+      : pageType = BookAppPageType.bookList,
+        bookId = null;
+  BookRoutePath.details(this.bookId) : pageType = BookAppPageType.bookDetail;
   BookRoutePath.unknown()
-      : id = null,
-        isUnknown = true;
+      : pageType = BookAppPageType.unknown,
+        bookId = null;
 
-  bool get isHomePage => id == null;
-
-  bool get isDetailsPage => id != null;
+  bool get isHomePage => pageType == BookAppPageType.bookList;
+  bool get isDetailsPage => pageType == BookAppPageType.bookDetail;
+  bool get isUnknown => pageType == BookAppPageType.unknown;
 }
 
 class BookRouterDelegate extends RouterDelegate<BookRoutePath>
@@ -28,6 +33,7 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
+  BookRoutePath path = BookRoutePath.home();
   Book? _selectedBook;
   bool show404 = false;
 
@@ -40,69 +46,52 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   BookRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
   @override
-  BookRoutePath get currentConfiguration {
-    if (show404) {
-      return BookRoutePath.unknown();
-    }
-
-    return _selectedBook == null
-        ? BookRoutePath.home()
-        : BookRoutePath.details(books.indexOf(_selectedBook!));
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
       pages: [
         BookListPage(books: books, onBookTappbed: _handleBookTapped),
         if (show404)
-          const MaterialPage(
-              key: ValueKey('UnknownPage'), child: UnknownScreen())
+          const UnknownPage()
         else if (_selectedBook != null)
           BookDetailsPage(book: _selectedBook!),
       ],
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-
-        // Update the list of pages by setting _selectedBook to null
-        _selectedBook = null;
-        show404 = false;
-        notifyListeners();
-
-        return true;
-      },
+      onPopPage: _onPopPage,
     );
   }
 
   @override
-  // ignore: avoid_renaming_method_parameters
-  Future<void> setNewRoutePath(BookRoutePath path) async {
-    if (path.isUnknown) {
+  BookRoutePath get currentConfiguration => path;
+
+  @override
+  Future<void> setNewRoutePath(BookRoutePath configuration) async {
+    path = configuration;
+    try {
+      _selectedBook = books[path.bookId!];
+      show404 = path.isUnknown;
+    } catch (e) {
       _selectedBook = null;
       show404 = true;
-      return;
     }
-
-    if (path.isDetailsPage) {
-      if (path.id! < 0 || path.id! > books.length - 1) {
-        show404 = true;
-        return;
-      }
-
-      _selectedBook = books[path.id!];
-    } else {
-      _selectedBook = null;
-    }
-
-    show404 = false;
   }
 
   void _handleBookTapped(Book book) {
     _selectedBook = book;
     notifyListeners();
+  }
+
+  bool _onPopPage(Route<dynamic> route, dynamic result) {
+    if (!route.didPop(result)) {
+      return false;
+    }
+
+    // Update the list of pages by setting _selectedBook to null
+    path = BookRoutePath.home();
+    _selectedBook = null;
+    show404 = false;
+    notifyListeners();
+
+    return true;
   }
 }
 
@@ -141,7 +130,7 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
       return const RouteInformation(location: '/');
     }
     if (path.isDetailsPage) {
-      return RouteInformation(location: '/book/${path.id}');
+      return RouteInformation(location: '/book/${path.bookId}');
     }
     return null;
   }
