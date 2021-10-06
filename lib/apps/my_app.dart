@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../pages/simple_counter.dart';
+import '../page/simple_counter.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
