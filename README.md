@@ -25,3 +25,4 @@ samples, guidance on mobile development, and a full API reference.
 
 - [Flutterの状態管理手法の選定, mono , Aug 29, 2020](https://medium.com/flutter-jp/state-1daa7fd66b94)
 - [Learning Flutter’s new navigation and routing system, John Ryan, Sep 30, 2020](https://medium.com/flutter/learning-flutters-new-navigation-and-routing-system-7c9068155ade)
+- [Flutter の Navigator 2.0 の解説 前編, ntaoo, 2020.12.26に公開](https://zenn.dev/ntaoo/articles/6641e846765da1)
