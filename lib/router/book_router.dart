@@ -35,8 +35,8 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
+  BookRoutePath path = const BookRoutePath.home();
   Book? _selectedBook;
-  bool show404 = false;
 
   List<Book> books = [
     Book('Left Hand of Darkness', 'Ursula K. Le Guin'),
@@ -52,9 +52,9 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
       key: navigatorKey,
       pages: [
         BookListPage(books: books, onBookTappbed: _handleBookTapped),
-        if (show404)
+        if (path.isUnknown)
           const UnknownPage()
-        else if (_selectedBook != null)
+        else if (path.isDetailsPage)
           BookDetailsPage(book: _selectedBook!),
       ],
       onPopPage: _onPopPage,
@@ -62,36 +62,27 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   }
 
   @override
-  BookRoutePath get currentConfiguration {
-    if (show404) {
-      return const BookRoutePath.unknown();
-    } else if (null != _selectedBook) {
-      return BookRoutePath.details(books.indexOf(_selectedBook!));
-    } else {
-      return const BookRoutePath.home();
-    }
-  }
+  BookRoutePath get currentConfiguration => path;
 
   @override
   Future<void> setNewRoutePath(BookRoutePath configuration) async {
+    path = configuration;
     if (configuration.isHomePage) {
       _selectedBook = null;
-      show404 = false;
     } else if (configuration.isDetailsPage) {
       try {
         _selectedBook = books[configuration.bookId!];
-        show404 = configuration.isUnknown;
       } catch (e) {
+        path = const BookRoutePath.unknown();
         _selectedBook = null;
-        show404 = true;
       }
     } else {
       _selectedBook = null;
-      show404 = configuration.isUnknown;
     }
   }
 
   void _handleBookTapped(Book book) {
+    path = BookRoutePath.details(books.indexOf(book));
     _selectedBook = book;
     notifyListeners();
   }
@@ -102,8 +93,8 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
     }
 
     // Update the list of pages by setting _selectedBook to null
+    path = const BookRoutePath.home();
     _selectedBook = null;
-    show404 = false;
     notifyListeners();
 
     return true;
