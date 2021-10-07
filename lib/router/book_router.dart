@@ -11,15 +11,17 @@ enum BookAppPageType {
   bookDetail,
 }
 
+@immutable
 class BookRoutePath {
   final BookAppPageType pageType;
   final int? bookId;
 
-  BookRoutePath.home()
+  const BookRoutePath.home()
       : pageType = BookAppPageType.bookList,
         bookId = null;
-  BookRoutePath.details(this.bookId) : pageType = BookAppPageType.bookDetail;
-  BookRoutePath.unknown()
+  const BookRoutePath.details(this.bookId)
+      : pageType = BookAppPageType.bookDetail;
+  const BookRoutePath.unknown()
       : pageType = BookAppPageType.unknown,
         bookId = null;
 
@@ -33,7 +35,7 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  BookRoutePath path = BookRoutePath.home();
+  BookRoutePath path = const BookRoutePath.home();
   Book? _selectedBook;
   bool show404 = false;
 
@@ -109,7 +111,7 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
     final uri = Uri.parse(routeInformation.location!);
     // Handle '/'
     if (uri.pathSegments.isEmpty) {
-      return BookRoutePath.home();
+      return const BookRoutePath.home();
     }
 
     // Handle '/book/:id'
@@ -117,12 +119,12 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
       if (uri.pathSegments[0] != 'book') return BookRoutePath.unknown();
       var remaining = uri.pathSegments[1];
       var id = int.tryParse(remaining);
-      if (id == null) return BookRoutePath.unknown();
+      if (id == null) return const BookRoutePath.unknown();
       return BookRoutePath.details(id);
     }
 
     // Handle unknown routes
-    return BookRoutePath.unknown();
+    return const BookRoutePath.unknown();
   }
 
   @override
