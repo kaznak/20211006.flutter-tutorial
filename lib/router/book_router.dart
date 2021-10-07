@@ -35,7 +35,6 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  BookRoutePath path = const BookRoutePath.home();
   Book? _selectedBook;
   bool show404 = false;
 
@@ -75,7 +74,6 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
 
   @override
   Future<void> setNewRoutePath(BookRoutePath configuration) async {
-    path = configuration;
     if (configuration.isHomePage) {
       _selectedBook = null;
       show404 = false;
@@ -84,7 +82,6 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
         _selectedBook = books[configuration.bookId!];
         show404 = configuration.isUnknown;
       } catch (e) {
-        path = const BookRoutePath.unknown();
         _selectedBook = null;
         show404 = true;
       }
