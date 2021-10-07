@@ -63,22 +63,34 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   }
 
   @override
-  BookRoutePath get currentConfiguration => path;
+  BookRoutePath get currentConfiguration {
+    if (show404) {
+      return const BookRoutePath.unknown();
+    } else if (null != _selectedBook) {
+      return BookRoutePath.details(books.indexOf(_selectedBook!));
+    } else {
+      return const BookRoutePath.home();
+    }
+  }
 
   @override
   Future<void> setNewRoutePath(BookRoutePath configuration) async {
     path = configuration;
-    if (path.isDetailsPage) {
+    if (configuration.isHomePage) {
+      _selectedBook = null;
+      show404 = false;
+    } else if (configuration.isDetailsPage) {
       try {
-        _selectedBook = books[path.bookId!];
-        show404 = path.isUnknown;
+        _selectedBook = books[configuration.bookId!];
+        show404 = configuration.isUnknown;
       } catch (e) {
+        path = const BookRoutePath.unknown();
         _selectedBook = null;
         show404 = true;
       }
     } else {
       _selectedBook = null;
-      show404 = path.isUnknown;
+      show404 = configuration.isUnknown;
     }
   }
 
@@ -93,7 +105,6 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
     }
 
     // Update the list of pages by setting _selectedBook to null
-    path = const BookRoutePath.home();
     _selectedBook = null;
     show404 = false;
     notifyListeners();
