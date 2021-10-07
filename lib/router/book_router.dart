@@ -93,7 +93,7 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
     }
 
     // Update the list of pages by setting _selectedBook to null
-    path = BookRoutePath.home();
+    path = const BookRoutePath.home();
     _selectedBook = null;
     show404 = false;
     notifyListeners();
@@ -106,7 +106,7 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
   @override
   Future<BookRoutePath> parseRouteInformation(
       RouteInformation routeInformation) async {
-    if (null == routeInformation.location) return BookRoutePath.home();
+    if (null == routeInformation.location) return const BookRoutePath.home();
 
     final uri = Uri.parse(routeInformation.location!);
     // Handle '/'
@@ -116,7 +116,7 @@ class BookRouteInformationParser extends RouteInformationParser<BookRoutePath> {
 
     // Handle '/book/:id'
     if (uri.pathSegments.length == 2) {
-      if (uri.pathSegments[0] != 'book') return BookRoutePath.unknown();
+      if (uri.pathSegments[0] != 'book') return const BookRoutePath.unknown();
       var remaining = uri.pathSegments[1];
       var id = int.tryParse(remaining);
       if (id == null) return const BookRoutePath.unknown();
