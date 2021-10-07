@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   # freezed: ^0.14.5 # conflicts with other packages.
+  flutter_hooks: ^0.18.0
+  hooks_riverpod: ^1.0.0-dev.9
 
   amplify_flutter: ^0.2.0
   amplify_auth_cognito: ^0.2.0
