@@ -28,3 +28,4 @@ samples, guidance on mobile development, and a full API reference.
 - [Flutter/Dartにおけるimmutableの実践的な扱い方, mono , May 10](https://medium.com/flutter-jp/immutable-d23bae5c29f8)
 - [Learning Flutter’s new navigation and routing system, John Ryan, Sep 30, 2020](https://medium.com/flutter/learning-flutters-new-navigation-and-routing-system-7c9068155ade)
 - [Flutter の Navigator 2.0 の解説 前編, ntaoo, 2020.12.26に公開](https://zenn.dev/ntaoo/articles/6641e846765da1)
+- [Navigator 2.0 の解説 後編 1, ntaoo, 2021.01.05に公開](https://zenn.dev/ntaoo/articles/e647ceaacb7214)
