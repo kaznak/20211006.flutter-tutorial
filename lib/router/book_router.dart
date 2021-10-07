@@ -66,12 +66,17 @@ class BookRouterDelegate extends RouterDelegate<BookRoutePath>
   @override
   Future<void> setNewRoutePath(BookRoutePath configuration) async {
     path = configuration;
-    try {
-      _selectedBook = books[path.bookId!];
-      show404 = path.isUnknown;
-    } catch (e) {
+    if (path.isDetailsPage) {
+      try {
+        _selectedBook = books[path.bookId!];
+        show404 = path.isUnknown;
+      } catch (e) {
+        _selectedBook = null;
+        show404 = true;
+      }
+    } else {
       _selectedBook = null;
-      show404 = true;
+      show404 = path.isUnknown;
     }
   }
 
